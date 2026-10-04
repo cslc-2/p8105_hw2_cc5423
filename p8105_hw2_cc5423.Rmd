@@ -26,3 +26,42 @@ transit_df =
     ))
 ```
 
+This dataset currently includes the following variables: line, station_name, station_latitude, station_longitude, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11, entrance_type, entry, vending, ada. These variables contain values for the station line, its name, location, routes that it serves, entrance type, entry, vending, and ADA compliance. I read in the original csv file and cleaned the variable names so they were in snake case. Then, since it originally contained extra information that I did not need (such as the division, staff and staff hours, and exit type), I just kept the variables listed above. Lastly, I changed the entry variable from a character (YES/NO) to logical (TRUE/FALSE).
+
+The dataset is not tidy, since the routes served are separate columns route1-11, rather than under one column. This means that those columns are values, rather than variable names.
+
+```{r}
+transit_df |> 
+  distinct(station_name,line) |> 
+  nrow()
+```
+There are 465 distinct stations.
+
+```{r}
+transit_df |> 
+  filter(ada == TRUE) |> 
+  distinct(station_name,line) |> 
+  nrow()
+```
+There are 84 distinct stations that are ADA compliant.
+
+Total number of station entrances/exits without vending:
+```{r}
+transit_df |> 
+  filter(vending == "NO") |> 
+  nrow()
+```
+Number of station entrances/exits without vending and allow entry:
+```{r}
+transit_df |> 
+  filter(entry == TRUE, vending == "NO") |> 
+  nrow()
+```
+
+69/183 of the station entrances/exits without vending allow entrance. 
+
+
+
+
+
+
