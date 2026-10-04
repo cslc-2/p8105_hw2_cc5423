@@ -6,13 +6,13 @@ output: github_document
 ---
 
 Loading packages
-```{r}
+```{r message = F}
 library(tidyverse)
 ```
 
 # Problem 1
 
-Reading in the csv data file, cleaning names, keeping the variables we want, and converting the entry variable from character to logical.
+### Reading in the csv data file, cleaning names, keeping the variables we want, and converting the entry variable from character to logical:
 ```{r}
 transit_df =
   read_csv("data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv", na = c("","NA",".")) |> 
@@ -30,6 +30,8 @@ This dataset currently includes the following variables: line, station_name, sta
 
 The dataset is not tidy, since the routes served are separate columns route1-11, rather than under one column. This means that those columns are values, rather than variable names.
 
+### Answering some questions about the data:
+*How many distinct stations are there?*
 ```{r}
 transit_df |> 
   distinct(station_name,line) |> 
@@ -37,6 +39,7 @@ transit_df |>
 ```
 There are 465 distinct stations.
 
+*How many stations are ADA compliant?*
 ```{r}
 transit_df |> 
   filter(ada == TRUE) |> 
@@ -44,6 +47,9 @@ transit_df |>
   nrow()
 ```
 There are 84 distinct stations that are ADA compliant.
+
+
+*What proportion of station entrances / exits without vending allow entrance?*
 
 Total number of station entrances/exits without vending:
 ```{r}
@@ -57,8 +63,42 @@ transit_df |>
   filter(entry == TRUE, vending == "NO") |> 
   nrow()
 ```
-
 69/183 of the station entrances/exits without vending allow entrance. 
+
+### Reformat the data so that route number and route name are distinct variables, then answer some questions:
+```{r}
+transit_df_tidy =
+  transit_df |> 
+  mutate(route8 = as.character(route8),
+         route9 = as.character(route9),
+         route10 = as.character(route10),
+         route11 = as.character(route11)
+           ) |> 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_number",
+    names_prefix = "route",
+    values_to = "route_name"
+    )
+```
+
+*How many distinct stations serve the A train?*
+```{r}
+transit_df_tidy |> 
+  filter(route_name == "A") |> 
+  distinct(station_name,line) |> 
+  nrow()
+```
+60 distinct stations serve the A train.
+
+*Of the stations that serve the A train, how many are ADA compliant?*
+```{r}
+transit_df_tidy |> 
+  filter(route_name == "A", ada == TRUE) |> 
+  distinct(station_name,line) |> 
+  nrow()
+```
+Of the stations that serve the A train, 17 of them are ADA compliant.
 
 
 
