@@ -5,3 +5,24 @@ date: "2026-10-04"
 output: github_document
 ---
 
+Loading packages
+```{r}
+library(tidyverse)
+```
+
+# Problem 1
+
+Reading in the csv data file, cleaning names, keeping the variables we want, and converting the entry variable from character to logical.
+```{r}
+transit_df =
+  read_csv("data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv", na = c("","NA",".")) |> 
+  janitor::clean_names() |> 
+  select(line:entry, vending, ada) |> 
+  mutate(
+    entry = recode_values(
+      entry,
+      "YES" ~ TRUE,
+      "NO" ~ FALSE
+    ))
+```
+
