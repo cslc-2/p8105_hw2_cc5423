@@ -1,0 +1,7 @@
+---
+title: "Homework 2"
+author: "Christina Chen"
+date: "2026-10-04"
+output: github_document
+---
+
