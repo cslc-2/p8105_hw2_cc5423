@@ -5,15 +5,16 @@ date: "2026-10-04"
 output: github_document
 ---
 
-Loading packages
+Loading packages:
 ```{r message = F}
 library(tidyverse)
+library(readxl)
 ```
 
 # Problem 1
 
 ### Reading in the csv data file, cleaning names, keeping the variables we want, and converting the entry variable from character to logical:
-```{r}
+```{r message = F}
 transit_df =
   read_csv("data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv", na = c("","NA",".")) |> 
   janitor::clean_names() |> 
@@ -99,6 +100,44 @@ transit_df_tidy |>
   nrow()
 ```
 Of the stations that serve the A train, 17 of them are ADA compliant.
+
+# Problem 2
+
+Read and clean the Mr. Trash Wheel dataset:
+```{r}
+mr_df =
+  read_excel("data/202509 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N709") |> 
+  janitor::clean_names() |> 
+  mutate(sports_balls = as.integer(sports_balls))
+```
+
+Read and clean Professor Trash Wheel and Gwynnda datasets and add wheel variable to mark which wheel it is:
+```{r}
+prof_df = 
+  read_excel("data/202509 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel", range = "A2:M134") |> 
+  janitor::clean_names() |> 
+  mutate(wheel = "professor",
+         year = as.character(year))
+
+gwynn_df =
+read_excel("data/202509 Trash Wheel Collection Data.xlsx", sheet = "Gwynns Falls Trash Wheel", range = "A2:L351") |> 
+  janitor::clean_names() |> 
+  mutate(wheel = "gwynnda",
+         year = as.character(year))
+
+mr_df = mutate(mr_df, wheel = "mr")
+```
+
+Bind all the datasets together:
+```{r}
+trash_wheel_tidy =
+  bind_rows(mr_df, prof_df, gwynn_df) |> 
+  relocate(wheel)
+```
+
+This dataset includes information on `r nrow(distinct(trash_wheel_tidy, wheel))` trash wheels: Mr. Trash Wheel, Professor Trash Wheel, and Gwynnda Trash Wheel.
+
+
 
 
 
