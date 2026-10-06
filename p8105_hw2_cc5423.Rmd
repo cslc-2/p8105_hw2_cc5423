@@ -54,17 +54,19 @@ There are 84 distinct stations that are ADA compliant.
 
 Total number of station entrances/exits without vending:
 ```{r}
-transit_df |> 
-  filter(vending == "NO") |> 
-  nrow()
+no_vending =
+  transit_df |> 
+    filter(vending == "NO") |> 
+    nrow()
 ```
 Number of station entrances/exits without vending and allow entry:
 ```{r}
-transit_df |> 
-  filter(entry == TRUE, vending == "NO") |> 
-  nrow()
+allow_entry =
+  transit_df |> 
+    filter(entry == TRUE, vending == "NO") |> 
+    nrow()
 ```
-69/183 of the station entrances/exits without vending allow entrance. 
+`r allow_entry`/`r no_vending`, or `r round(allow_entry/no_vending, digits = 4)` of the station entrances/exits without vending allow entrance.
 
 
 **Reformat the data so that route number and route name are distinct variables, then answer some questions:**
@@ -156,7 +158,7 @@ baseline_df =
 * Recode `sex` and `apoe4` so they are not numeric and instead have labeled categories
 * Remove participants that have MCI at baseline: There do not seem to be any participants that had MCI before the baseline age.
 
-The baseline dataset `baseline_df` provides information on the participants' id, baseline age, sex, years of education, whether they are a carrier of APOE4, and age of onset of MCI if they did get MCI during the follow-up. This dataset has `r nrow(baseline_df)` observations or participants recruited, and `r ncol(baseline_df)` variables. `r nrow(filter(baseline_df, age_at_onset != "na"))` participants develop MCI. The average baseline age is `r round(mean(baseline_df$current_age), digits = 2)` years. 
+The baseline dataset `baseline_df` provides information on the participants' id, baseline age, sex, years of education, whether they are a carrier of APOE4, and age of onset of MCI if they did get MCI during the follow-up. This dataset has `r nrow(baseline_df)` observations or participants recruited, and `r ncol(baseline_df)` variables. Of these participants, `r nrow(filter(baseline_df, age_at_onset != "na"))` participants develop MCI. The average baseline age is `r round(mean(baseline_df$current_age), digits = 2)` years. `r nrow(filter(baseline_df, sex == "female", apoe4 == "carrier"))`/`r nrow(filter(baseline_df, sex == "female"))`, or `r nrow(filter(baseline_df, sex == "female", apoe4 == "carrier"))/nrow(filter(baseline_df, sex == "female"))` of the women in the study are APOE4 carriers.
 
 Import, clean, tidying of longitudinal biomarker dataset:
 ```{r message = F}
