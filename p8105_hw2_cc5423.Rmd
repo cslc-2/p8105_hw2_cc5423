@@ -184,8 +184,10 @@ combined_df =
 
 After combining `baseline_df` and `long_bio_df` using `inner_join` to keep only participants in both datasets, we have a combined dataset with `r nrow(combined_df)` observations or participants in this dataset, and `r ncol(combined_df)` variables.
 
-
-
+Exporting resulting dataframe:
+```{r}
+write_csv(combined_df, "data/data_mci/mci_combined.csv")
+```
 
 
 
