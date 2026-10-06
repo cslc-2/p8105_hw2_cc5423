@@ -109,24 +109,27 @@ Of the stations that serve the A train, 17 of them are ADA compliant.
 Read and clean the Mr. Trash Wheel dataset:
 ```{r}
 mr_df =
-  read_excel("data/202509 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N709") |> 
+  read_excel("data/202610 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N742") |> 
   janitor::clean_names() |> 
-  mutate(sports_balls = as.integer(sports_balls))
+  mutate(sports_balls = as.integer(sports_balls),
+         plastic_bottles = as.character(plastic_bottles))
 ```
 
-Read and clean Professor Trash Wheel and Gwynnda datasets and add wheel variable to mark which wheel the data belong to:
+Read and clean Professor Trash Wheel and Gwynnda datasets and add wheel variable to mark which wheel the data belong to
+(Note: the variable `plastic_bottles` had to be converted to character to make sure they were aligned across all wheels before binding):
 ```{r}
 prof_df = 
-  read_excel("data/202509 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel", range = "A2:M134") |> 
+  read_excel("data/202610 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel", range = "A2:M139") |> 
   janitor::clean_names() |> 
   mutate(wheel = "professor",
          year = as.character(year))
 
 gwynn_df =
-read_excel("data/202509 Trash Wheel Collection Data.xlsx", sheet = "Gwynns Falls Trash Wheel", range = "A2:L351") |> 
+read_excel("data/202610 Trash Wheel Collection Data.xlsx", sheet = "Gwynnda the Good Wheel of the W", range = "A2:L394") |>
   janitor::clean_names() |> 
   mutate(wheel = "gwynnda",
-         year = as.character(year))
+         year = as.character(year),
+         plastic_bottles = as.character(plastic_bottles))
 
 mr_df = mutate(mr_df, wheel = "mr")
 ```
@@ -139,7 +142,7 @@ trash_wheel_tidy =
 ```
 
 
-The tidied dataset `trash_wheel_tidy` includes information on `r nrow(distinct(trash_wheel_tidy, wheel))` trash wheels: Mr. Trash Wheel, Professor Trash Wheel, and Gwynnda Trash Wheel. There are `r nrow(trash_wheel_tidy)` observations in this dataset and `r ncol(trash_wheel_tidy)` variables. Some key variables in this dataset include the date of observation, weight of trash in tons, volume of trash in cubic yards, number of different types of trash collected, and number of Maryland homes powered by the trash. The total weight of trash collected by Professor Trash Wheel is `r sum(filter(trash_wheel_tidy, wheel == "professor")$weight_tons)` tons. The total number of cigarette butts collected by Gwynnda in June of 2022 is `r sum(filter(trash_wheel_tidy, wheel == "gwynnda", month == "June", year == "2022")$cigarette_butts)` cigarette butts.
+The tidied dataset `trash_wheel_tidy` includes information on `r nrow(distinct(trash_wheel_tidy, wheel))` trash wheels: Mr. Trash Wheel, Professor Trash Wheel, and Gwynnda the Good Wheel of the West. There are `r nrow(trash_wheel_tidy)` observations in this dataset and `r ncol(trash_wheel_tidy)` variables. Some key variables in this dataset include the date of observation, weight of trash in tons, volume of trash in cubic yards, number of different types of trash collected, and number of Maryland homes powered by the trash. The total weight of trash collected by Professor Trash Wheel is `r sum(filter(trash_wheel_tidy, wheel == "professor")$weight_tons)` tons. The total number of cigarette butts collected by Gwynnda in June of 2022 is `r sum(filter(trash_wheel_tidy, wheel == "gwynnda", month == "June", year == "2022")$cigarette_butts)` cigarette butts.
 
 # Problem 3
 
