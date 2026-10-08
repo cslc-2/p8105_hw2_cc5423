@@ -153,7 +153,7 @@ baseline_df =
   janitor::clean_names() |> 
   mutate(sex = recode(sex, `1` = "male", `0` = "female"),
          apoe4 = recode(apoe4, `1` = "carrier", `0` = "non-carrier")) |> 
-  filter(is.na(age_at_onset) | age_at_onset >= current_age)
+  filter(is.na(age_at_onset) | age_at_onset > current_age)
 ```
 
 * Import baseline dataset, which is a csv file, skipping the first row, which is a header.
@@ -167,7 +167,7 @@ Import, clean, tidying of longitudinal biomarker dataset:
 ```{r message = F}
 long_bio_df =
   read_csv("data/data_mci/mci_amyloid.csv", skip = 1, na = c("","NA",".")) |> 
-  janitor::clean_names() |> 
+  janitor::clean_names() |>  
   rename(id = study_id)
 ```
 
