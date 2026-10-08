@@ -175,9 +175,9 @@ long_bio_df =
 * Clean variable names using janitor package
 * Rename `study_id` column to `id` to match baseline dataset
 
-The longitudinal biomarker dataset `long_bio_df` provides information on amyloid beta 42/40 ratio (an Alzheimer's biomarker) at baseline and timepoints 2, 4, 6, and 8 of the study for each participant. This dataset has `r nrow(long_bio_df)` observations or participants in this dataset, and `r ncol(long_bio_df)` variables.
+The longitudinal biomarker amyloid dataset `long_bio_df` provides information on amyloid beta 42/40 ratio (an Alzheimer's biomarker) at baseline and timepoints 2, 4, 6, and 8 of the study for each participant. This dataset has `r nrow(long_bio_df)` observations or participants in this dataset, and `r ncol(long_bio_df)` variables.
 
-Some participants do appear in only the baseline or amyloid datasets. 
+`r nrow(anti_join(baseline_df, long_bio_df, by = "id"))` participants only show up in baseline and not the amyloid dataset. `r nrow(anti_join(long_bio_df, baseline_df, by = "id"))` participants show up in only the longitudinal amyloid dataset and not the baseline.
 
 Combine baseline and longitudinal biomarker datasets so that only participants in both datasets are there:
 ```{r}
